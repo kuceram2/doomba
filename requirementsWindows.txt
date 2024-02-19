@@ -1,0 +1,7 @@
+# knihovny potřebné pro běh programu ve Windows
+opencv-python
+numpy
+paho-mqtt
+keyboard
+pysimplegui
+queuelib

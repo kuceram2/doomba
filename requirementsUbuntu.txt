@@ -1,0 +1,4 @@
+# knihovny potřebné pro běh programu na Raspberry Pi
+opencv-python
+paho-mqtt
+pyserial
