@@ -1,9 +1,8 @@
 #include <Servo.h>
 
-// int trigger = 5;
-// int echo = 6;
 int pos = 10;
 int camServoPin = 8;
+int druheservo = 9;
 
 
 int IN3 = 5;
@@ -14,11 +13,9 @@ int ENA = 3;
 int ENB = 11;
 int LED1 = 10;
 int LED2 = 13;
+int SPOTLIGHT = A0;
 
 byte data;
-long time; // čas od vyslání signálu
-int distance; // vypočítaná vzdálenost
-//int period = 200; // doba pohybu
 int camPos = 90;
 int speed = 100;
 Servo servo;
@@ -37,21 +34,15 @@ pinMode(ENA,OUTPUT);
 pinMode(ENB,OUTPUT);
 pinMode(LED1, OUTPUT);
 pinMode(LED2, OUTPUT);
-// pinMode(trigger,OUTPUT);
-// pinMode(echo,INPUT);
-//pinMode(IN4,OUTPUT);
+pinMode(SPOTLIGHT, OUTPUT);
 
-//servo.attach(3);
-//servo.write(0);
 camServo.attach(camServoPin);
 camServo.write(90);
-delay(3000);
 }
 
 void loop() {
   if(Serial.available()){
     data = Serial.read();
-    //Serial.println(String(data));
     move(data);
 
     //Serial.flush();
@@ -60,17 +51,16 @@ void loop() {
   if(millis() - timeActive > period){
     analogWrite(ENA, 0);
     analogWrite(ENB, 0);
+    digitalWrite(IN1,LOW);
     digitalWrite(IN2,LOW);
     digitalWrite(IN3,LOW);
-    digitalWrite(IN1,LOW);
     digitalWrite(IN4,LOW);
-    //Serial.println("stop");
   }
 }
 
 void move(byte data){
+  // pohyb dopředu
   if(data == 'w'){
-  //Serial.println(speed);
   digitalWrite(IN1,LOW);
   digitalWrite(IN2,HIGH);
   digitalWrite(IN4,LOW);
@@ -78,13 +68,8 @@ void move(byte data){
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
   timeActive = millis();
-  // delay(period);
-  // digitalWrite(IN2,LOW);
-  // digitalWrite(IN3,LOW);
-  // analogWrite(ENA, 0);
-  // analogWrite(ENB, 0);
   }
-
+  // pohyb doleva
   else if(data == 'a'){
   digitalWrite(IN1,LOW);
   digitalWrite(IN2,HIGH);
@@ -93,13 +78,8 @@ void move(byte data){
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
   timeActive = millis();
-  // delay(period);
-  // digitalWrite(IN2,LOW);
-  // digitalWrite(IN4,LOW);
-  // analogWrite(ENA, 0);
-  // analogWrite(ENB, 0);
   }
-
+  // pohyb dozadu
   else if(data == 's'){
   digitalWrite(IN2,LOW);
   digitalWrite(IN1,HIGH);
@@ -108,15 +88,9 @@ void move(byte data){
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
   timeActive = millis();
-  // delay(period);
-  // digitalWrite(IN1,LOW);
-  // digitalWrite(IN4,LOW);
-  // analogWrite(ENA, 0);
-  // analogWrite(ENB, 0);
   }
-
+  // pohyb doprava
   else if(data == 'd'){
-
   digitalWrite(IN2,LOW);
   digitalWrite(IN1,HIGH);
   digitalWrite(IN4,LOW);
@@ -124,42 +98,41 @@ void move(byte data){
   analogWrite(ENA, speed);
   analogWrite(ENB, speed);
   timeActive = millis();
-  // delay(period);
-  // digitalWrite(IN1,LOW);
-  // digitalWrite(IN3,LOW);
-  // analogWrite(ENA, 0);
-  // analogWrite(ENB, 0);
   }
-// kamera nahoru
+  // kamera nahoru
   else if(data == 'n' and camPos < 135){
     camPos += 5;
     camServo.write(camPos);
     delay(20);
   }
-// kamera dolu
+  // kamera dolu
   else if(data == 'm' and camPos > 45){
     camPos -= 5;
     camServo.write(camPos);
     delay(20);
   }
-
+  // změna rychlosti
   else if(data == 'r'){
-    //Serial.println((char) data);
-    int val = Serial.readStringUntil('r').toInt();
-    //Serial.println(val);
-    
-    speed = map(val, 0, 100, 100, 255);
-    //Serial.println(speed);
+    int val = Serial.readStringUntil('r').toInt();    
+    speed = map(val, 0, 100, 100, 250);
   }
-
+  // zapnout podsvícení
   else if(data == 't'){
     digitalWrite(LED1,HIGH);
     digitalWrite(LED2, HIGH);
   }
-
+  // vypnout podsvícení
   else if(data == 'f'){
     digitalWrite(LED1,LOW);
     digitalWrite(LED2,LOW); 
+  }
+  // zapnout hledáček
+  else if (data == 'g'){
+    digitalWrite(SPOTLIGHT, HIGH);
+  }
+  // vypnout hledáček
+  else if (data == 'h'){
+    digitalWrite(SPOTLIGHT, LOW);
   }
 
 
