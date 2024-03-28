@@ -18,12 +18,12 @@ frame_rate = 10
 prev = 0
 run = True
 
-# Získání hostitele a sériového portu z argumentů příkazové řádky
+# Získání ip adresy brokeru a sériového portu z argumentů příkazové řádky
 host = str(sys.argv[1])
 serialPort = serial.Serial(port=sys.argv[2], baudrate=9600)
 port = 1883
 
-# Define Stream_publisher class
+# Třída pro streamování snímků z kamery a odesílání příkazů k pohybu
 class Stream_publisher:
     
     def __init__(self,host, port) -> None :
@@ -44,7 +44,7 @@ class Stream_publisher:
         self.client.message_callback_add("doomba/robot-light",self.on_light) # callback funkce pro zapnutí/vypnutí podsvícení
         self.client.message_callback_add("doomba/robot-spotlight",self.on_spotlight) # callback funkce pro zapnutí/vypnutí hledáčku
         
-        self.client.connect(host, port)
+        self.client.connect(host, port) # připojení klienta k brokeru
         
         self.client.loop_start() # spuštění smyčky pro příjem zpráv z brokeru
         

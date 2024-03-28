@@ -11,7 +11,7 @@ import sys
 import os
 from queue import Queue
 import webbrowser
-i =0
+i = 0
 cmd = ""
 speed = 30
 host = str(sys.argv[1])
@@ -115,7 +115,7 @@ class Mqtt_client:
         self.frame = cv2.imdecode(nparr,  cv2.IMREAD_COLOR)
         #self.frame= cv2.resize(self.frame, (600,400))   # možnost změny velikosti snímku
         
-         # převod snímku do formátu vhodného pro zobrazení v okně
+        # převod snímku do formátu vhodného pro zobrazení v okně
         img_bytes = cv2.imencode(".png", cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB))[1].tobytes()
         queue.put(img_bytes)
         print("Recieved frame num: ", i)
@@ -133,7 +133,6 @@ class Mqtt_client:
         print("image saved")
 
     def showFrame(self): # funkce pro zobrazení snímku v okně
-        #while True:
         if not queue.empty():
             img_bytes = queue.get()
             try:
@@ -152,7 +151,6 @@ class Mqtt_client:
                 print("command send: ",cmd)
                 self.lastCmd = time.time()
 
-                
         # pohyb doprava
         elif keyboard.is_pressed('d'): 
             cmd += "d"
@@ -195,12 +193,7 @@ class Mqtt_client:
                 time.sleep(2*delay)
             except cv2.error:
                 print("no frames recieved yet...")
-            self.lastCmd = time.time()
-
-        # start/stop záznamu videa
-        # elif keyboard.is_pressed('g') or event == "rec":
-        #     self.rec_video()
-        #     time.sleep(delay*2)    
+            self.lastCmd = time.time() 
             
         # zvýšení rychlosti -tlačítko
         elif keyboard.is_pressed('c') or event == "speedUp":

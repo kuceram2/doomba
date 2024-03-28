@@ -18,7 +18,6 @@ int SPOTLIGHT = A0;
 byte data;
 int camPos = 90;
 int speed = 100;
-Servo servo;
 Servo camServo;
 
 int period = 500;
